@@ -90,9 +90,9 @@ add_executable(${PROJECT_NAME}_node src/odometer.cpp)
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
- target_link_libraries(${PROJECT_NAME}_node
-   ${catkin_LIBRARIES}
+target_link_libraries(
+   ${PROJECT_NAME}_node
+   ${WIRINGPI_LIBRARIES}
+   ${CMAKE_THREAD_LIBS_INIT}
+   ${catkin_LIBRARIES} -lwiringPi
  )
-target_link_libraries(${PROJECT_NAME} ${WIRINGPI_LIBRARIES}) 
-target_link_libraries(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
-target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} -lwiringPi)
