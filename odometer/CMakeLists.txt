@@ -13,6 +13,8 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
 )
+find_package(WiringPi REQUIRED)
+find_package(Threads REQUIRED)
 
 file(GLOB_RECURSE project_HEADERS
   "*.h"
@@ -72,6 +74,7 @@ catkin_package(
 include_directories(include
   ${catkin_INCLUDE_DIRS}
 )
+include_directories(${WIRINGPI_INCLUDE_DIRS}) 
 
 ## Declare a C++ library
 add_library(${PROJECT_NAME}
@@ -90,4 +93,6 @@ add_executable(${PROJECT_NAME}_node src/odometer.cpp)
  target_link_libraries(${PROJECT_NAME}_node
    ${catkin_LIBRARIES}
  )
-
+target_link_libraries(${PROJECT_NAME} ${WIRINGPI_LIBRARIES}) 
+target_link_libraries(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} -lwiringPi)
