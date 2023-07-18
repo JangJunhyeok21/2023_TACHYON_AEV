@@ -10,34 +10,28 @@ odo::odo(ros::NodeHandle *nh){
 
 double odo::calculate_speed(){
     total_count+=count;
-    count=0;
-    return count*0.7205;
+    speed=count*0.7205;
+    count=0;    
+    return speed;
 }
 
 void odo::publish_speed(const ros::TimerEvent& ){
     //std_msgs::Float64 msg;
     odometer::speed_msg msg;
     msg.kph=calculate_speed();
-    msg.odo=total_count/36*1.441;
+    msg.odo=total_count/36.0*1.441;
     speed_pub.publish(msg);
+}
+int odo::count_up(){
+    count++;
 }
 
 int main(int argc, char**argv){
     wiringPiSetup();
-    pinMode(26,OUTPUT);
-    digitalWrite(26,HIGH);
-    bool flag=0;
+    pinMode(SENSOR_PIN,INPUT);
     ros::init(argc,argv,"odo_node");
     ros::NodeHandle nh;
     odo odometer(&nh);
-    /*while (1) {
-        if(){
-            odometer.count++;
-            flag=!flag;
-        }
-        else if(){
-            flag=!flag;
-        }
-    }*/
+    wiringPiISR(SENSOR_PIN,INT_EDGE_RISING,&odometer.count_up)
     ros::spin();
 }
