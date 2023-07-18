@@ -5,11 +5,13 @@
 #include <wiringPi.h>
 #define SENSOR_PIN 23
 
+static int g_count;
+
 class odo
 {
 private:
     float speed;
-    int count, total_count;
+    int total_count;
     ros::Publisher speed_pub;
 
 public:
@@ -17,7 +19,6 @@ public:
     odo(ros::NodeHandle *nh);
     double calculate_speed();
     void publish_speed(const ros::TimerEvent&);
-    int count_up();
 };
 
 #endif // ODOMETER_H
