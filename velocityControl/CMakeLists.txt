@@ -27,8 +27,8 @@ file(GLOB_RECURSE project_HEADERS
 ## Generate messages in the 'msg' folder
 add_message_files(
   FILES
-  misson_msg.msg
   velocity_msg.msg
+  misson_msg.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -60,7 +60,7 @@ generate_messages(
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES odometer
+  LIBRARIES velocityControl
   CATKIN_DEPENDS roscpp rospy std_msgs
   DEPENDS system_lib
 )

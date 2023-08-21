@@ -1,80 +1,84 @@
 #include "velocityControl.h"
 
-#define value 12 //BCM18(pwm0) || 32_BCM12(pwm0)
-#define brakePin 22 //BCM
-#define AS_SW 33 //BCM
-#define forward 44
-#define backward 55
-#define kp 80
-
 velocity::velocity(ros::NodeHandle *nh){
     kph=0;
     target_speed=0;
-    misson='m'; //a-accel b-brake c-complement e-Estop m-Manual
-    speed_sub=nh->subscribe("/speed",10,&velocity::speedSub, this);
-    misson_sub=nh->subscribe("/misson",10,&velocity::missonSub, this);
-    target_sub=nh->subscribe("/velocity",10,&velocity::targetSub, this);
+    misson='m'; //a-AS-ON m-MANUAL e-ESTOP
+    speed_sub=nh->subscribe("/const velocityControl::misson_msg& msgspeed",10,&velocity::speedSub, this);
+    target_sub=nh->subscribe("/target_velocity",10,&velocity::targetSub, this);
 }
-
 void velocity::speed_control(double speed, double target){ //목표속도 P제어
     //P control
     float err=target-speed;
-    digitalWrite(err>=0?forward:backward,HIGH);
-    digitalWrite(err>=0?backward:forward,LOW);
-    pwmWrite(value,err*kp);
+    digitalWrite(err>=0?accelPin:regenPin,HIGH);
+    digitalWrite(err>=0?regenPin:accelPin,LOW);
+    pwmWrite(value,abs(err*kp));
 }
-
+//미션에 따른 종방향제어는 상위에 맡기고 속도와 긴급정지만 판단한다.
+//조향모터와 클러치에 릴레이 사용하는걸 생각하며 설계. -> 하드웨어적 연결로 해결(as_sw에 5V직결)
 void velocity::speedSub(const odometer::speed_msg& msg){
-    ROS_INFO("KPH: %f, Trip: %f",msg.kph, msg.odo);
+    ROS_INFO("KPH: %fkm/h, Trip: %fm",msg.kph, msg.odo);
     kph=msg.kph;
-    digitalWrite(brakePin,LOW);
-    if(!digitalRead(AS_SW)){
-        misson='m';
-        ROS_INFO("AS-OFF MODE");
-        digitalWrite(forward,LOW);
-        digitalWrite(backward,LOW);
-        pwmWrite(amount,0);
+    if(AS_SW_flag && !estop_flag){ //자율주행 모드가 켜지고 Estop이 해제되어 있을 때
+        speed_control(kph,target_speed);
     }
-    else
-        switch(misson){
-            case 'a':
-                speed_control(kph,80);
-                break;
-            case 'b':
-                speed_control(kph,40);
-                break;
-            case 'c':
-                speed_control(kph,target_speed);
-                break;
-            case 'e':
-                ROS_INFO("E-STOP!!");
-                speed_control(kph,0);
-                digitalWrite(brakePin,HIGH);
-                break;
-            default:
-                break;
-        }
-    
 }
-
-void velocity::missonSub(const velocityControl::misson_msg& msg){
-    misson=msg.misson;
-}
-
 void velocity::targetSub(const velocityControl::velocity_msg& msg){
     target_speed=msg.targetKph;
 }
 
-int main(int argc, char**argv){
+void release(){
+    digitalWrite(brakePin,LOW);
+    digitalWrite(accelPin,LOW);
+    digitalWrite(regenPin,LOW);
+    pwmWrite(value,0);
+}
+
+void estop(){
+    estop_flag=digitalRead(estopPin);
+    if(estop_flag){
+        ROS_INFO("E-STOP!!");
+        digitalWrite(brakePin,HIGH);
+        digitalWrite(accelPin,LOW);
+        digitalWrite(regenPin,HIGH);
+        pwmWrite(value,1024);
+    }else{
+        ROS_INFO("E-STOP realese");
+        release();
+    }
+}
+void AS_switching(){
+    AS_SW_flag=digitalRead(AS_SW);
+    if(AS_SW_flag){
+        ROS_INFO("AS-ON MODE");
+    }else{
+        ROS_INFO("AS-OFF MODE");
+        release();
+    }
+}
+
+void setupWiringPi(){
     wiringPiSetup();
     pinMode(value,PWM_OUTPUT);
-    pinMode(forward,OUTPUT);
-    pinMode(backward,OUTPUT);
+    pinMode(accelPin,OUTPUT);
+    pinMode(regenPin,OUTPUT);
     pinMode(brakePin,OUTPUT);
     pinMode(AS_SW,INPUT);
+}
+
+int main(int argc, char**argv){
+    setupWiringPi();
     ros::init(argc,argv,"velCon_node");
     ros::NodeHandle nh;
     velocity velCon(&nh);
-    
+    wiringPiISR(estopPin,INT_EDGE_BOTH,&estop);
+    wiringPiISR(AS_SW,INT_EDGE_BOTH,&AS_switching);
+    for(;;)
+        if(digitalRead(estopPin))
+            velCon.misson='e';
+        else if(digitalRead(AS_SW))
+            velCon.misson='a';
+        else
+            velCon.misson='m';
     ros::spin();
 }

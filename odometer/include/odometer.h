@@ -4,6 +4,7 @@
 #include "odometer/speed_msg.h"
 #include <wiringPi.h>
 #define SENSOR_PIN 23
+#define PPR 36
 
 static int g_count;
 
