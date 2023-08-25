@@ -2,7 +2,6 @@
 #define VELOCITY_H
 #include "ros/ros.h"
 #include "velocityControl/velocity_msg.h"
-#include "velocityControl/misson_msg.h"
 #include "odometer/speed_msg.h"
 #include <wiringPi.h>
 #include <stdlib.h>

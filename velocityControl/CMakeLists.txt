@@ -28,7 +28,6 @@ file(GLOB_RECURSE project_HEADERS
 add_message_files(
   FILES
   velocity_msg.msg
-  misson_msg.msg
 )
 
 ## Generate services in the 'srv' folder

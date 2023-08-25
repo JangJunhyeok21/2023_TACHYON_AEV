@@ -73,12 +73,12 @@ int main(int argc, char**argv){
     velocity velCon(&nh);
     wiringPiISR(estopPin,INT_EDGE_BOTH,&estop);
     wiringPiISR(AS_SW,INT_EDGE_BOTH,&AS_switching);
-    for(;;)
-        if(digitalRead(estopPin))
-            velCon.misson='e';
-        else if(digitalRead(AS_SW))
-            velCon.misson='a';
-        else
-            velCon.misson='m';
+    // for(;;)
+    //     if(digitalRead(estopPin))
+    //         velCon.misson='e';
+    //     else if(digitalRead(AS_SW))
+    //         velCon.misson='a';
+    //     else
+    //         velCon.misson='m';
     ros::spin();
 }
