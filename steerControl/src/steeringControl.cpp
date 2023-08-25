@@ -3,7 +3,7 @@
 steer::steer(ros::NodeHandle *nh){
     target_sub=nh->subscribe("/target_angle",10,&steer::targetSub, this);
     encode_sub=nh->subscribe("/encoder",10,&steer::encodeSub, this);
-    timer=nh->createTimer(ros::Duration(0.01),&steer::steerControl,this);
+    timer=nh->createTimer(ros::Duration(0.1),&steer::steerControl,this);
 }
 
 void steer::targetSub(const std_msgs::Int32& msg){
@@ -12,12 +12,11 @@ void steer::targetSub(const std_msgs::Int32& msg){
 
 void steer::encodeSub(const std_msgs::Int32& msg){
     angle=msg.data*6/steerRatio;
-    steerControl(angle,target_angle);
 }
 
-void steer::steerControl(int angle, int target){
+void steer::steerControl(const ros::TimerEvent& ){
     //조향은 PID제어
-    float err=target-angle;
+    float err=target_angle-angle;
     static float prev_err=0;
     float dErr=err-prev_err;
     prev_err=err;

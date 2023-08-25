@@ -24,7 +24,7 @@ public:
     ros::Subscriber encode_sub;
     void targetSub(const std_msgs::Int32& msg);
     void encodeSub(const std_msgs::Int32& msg);
-    void steerControl(int angle, int target);
+    void steerControl(const ros::TimerEvent&);
 };
 
 #endif //STEERING_H
