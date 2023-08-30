@@ -4,9 +4,9 @@
 #include "std_msgs/Int32.h"
 #include <wiringPi.h>
 
-#define value 11
-#define right 22
-#define left 33
+#define value 40
+#define right 36
+#define left 38
 #define kp 1
 #define ki 1
 #define kd 1
