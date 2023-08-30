@@ -7,11 +7,11 @@
 #include <stdlib.h>
 
 #define value 12 //BCM18(pwm0) || 32_BCM12(pwm0)
-#define brakePin 22 //BCM## arduino boolean signal 0:release 1:engaged
-#define AS_SW 33 //BCM
-#define accelPin 44
-#define regenPin 55
-#define estopPin 66
+#define brakePin 16 //BCM## arduino boolean signal 0:release 1:engaged
+#define AS_SW 18 //BCM
+#define accelPin 22
+#define regenPin 24
+#define estopPin 26
 //#define steer_relay 66 //조향 모터드라이브 릴레이 신호선 -> as-sw에 연결하여 자율주행 모드일 때 자동으로 붙음.
 #define kp 20
 
