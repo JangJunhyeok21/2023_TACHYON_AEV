@@ -18,7 +18,7 @@ double odo::calculate_speed(){
 void odo::publish_speed(const ros::TimerEvent& ){
     odometer::speed_msg msg;
     msg.kph=calculate_speed();
-    msg.odo=total_count/36.0*1.527;
+    msg.odo=total_count/PPR*1.527;
     speed_pub.publish(msg);
 }
 void count_up(){
@@ -31,6 +31,6 @@ int main(int argc, char**argv){
     ros::init(argc,argv,"odo_node");
     ros::NodeHandle nh;
     odo odometer(&nh);
-    wiringPiISR(SENSOR_PIN,INT_EDGE_RISING,&count_up); //sensing
+    wiringPiISR(SENSOR_PIN,INT_EDGE_BOTH,&count_up); //sensing
     ros::spin();
 }
