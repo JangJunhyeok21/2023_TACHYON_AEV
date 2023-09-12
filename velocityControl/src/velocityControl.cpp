@@ -53,7 +53,6 @@ void AS_switching(){
         ROS_INFO("AS-ON MODE");
     }else{
         ROS_INFO("AS-OFF MODE");
-        release();
     }
 }
 
@@ -64,6 +63,7 @@ void setupWiringPi(){
     pinMode(regenPin,OUTPUT);
     pinMode(brakePin,OUTPUT);
     pinMode(AS_SW,INPUT);
+    pinMode(estopPin,INPUT);
 }
 
 int main(int argc, char**argv){
@@ -73,12 +73,5 @@ int main(int argc, char**argv){
     velocity velCon(&nh);
     wiringPiISR(estopPin,INT_EDGE_BOTH,&estop);
     wiringPiISR(AS_SW,INT_EDGE_BOTH,&AS_switching);
-    // for(;;)
-    //     if(digitalRead(estopPin))
-    //         velCon.misson='e';
-    //     else if(digitalRead(AS_SW))
-    //         velCon.misson='a';
-    //     else
-    //         velCon.misson='m';
     ros::spin();
 }
