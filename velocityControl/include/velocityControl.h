@@ -23,7 +23,6 @@ class velocity
 private:
     double kph, target_speed, accel;
 public:
-    char misson;
     ros::Subscriber speed_sub;
     ros::Subscriber target_sub;
     velocity(ros::NodeHandle *nh);

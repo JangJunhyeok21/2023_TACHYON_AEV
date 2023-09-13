@@ -3,16 +3,21 @@
 velocity::velocity(ros::NodeHandle *nh){
     kph=0;
     target_speed=0;
-    misson='m'; //a-AS-ON m-MANUAL e-ESTOP
     speed_sub=nh->subscribe("/const velocityControl::misson_msg& msgspeed",10,&velocity::speedSub, this);
     target_sub=nh->subscribe("/target_velocity",10,&velocity::targetSub, this);
 }
 void velocity::speed_control(double speed, double target){ //목표속도 P제어
     //P control
     float err=target-speed;
-    digitalWrite(err>=0?accelPin:regenPin,HIGH);
-    digitalWrite(err>=0?regenPin:accelPin,LOW);
-    pwmWrite(value,abs(err*kp));
+    if(err>=0){
+        digitalWrite(accelPin,HIGH);
+        digitalWrite(regenPin,LOW);
+        pwmWrite(value,abs(err*kp));
+    }else{
+        digitalWrite(accelPin,LOW);
+        digitalWrite(regenPin,HIGH);
+        pwmWrite(value,abs(err*kp)/5);  //회생제동량은 가속에 비해 10%
+    }
 }
 //미션에 따른 종방향제어는 상위에 맡기고 속도와 긴급정지만 판단한다.
 //조향모터와 클러치에 릴레이 사용하는걸 생각하며 설계. -> 하드웨어적 연결로 해결(as_sw에 5V직결)
@@ -53,6 +58,7 @@ void AS_switching(){
         ROS_INFO("AS-ON MODE");
     }else{
         ROS_INFO("AS-OFF MODE");
+        if(!estop_flag) release();
     }
 }
 
