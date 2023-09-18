@@ -29,12 +29,12 @@ void count_up(){
 }
 
 int main(int argc, char**argv){
-    wiringPiSetup();
+    wiringPiSetupPhys();
     pinMode(SENSOR_PIN,INPUT);
     ros::init(argc,argv,"odo_node");
     ros::NodeHandle nh;
     odo odometer(&nh);
-    //wiringPiISR(SENSOR_PIN,INT_EDGE_BOTH,count_up); //sensing
+    //wiringPiISR(SENSOR_PIN,INT_EDGE_BOTH,&count_up); //sensing
     while(1){
         if(digitalRead(SENSOR_PIN))
         ROS_INFO("high");
