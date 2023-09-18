@@ -12,6 +12,7 @@ double odo::calculate_speed(){
     total_count+=g_count; //refresh odom
     speed=(g_count*1.527/PPR)*3.6*2; //count to KPH
     g_count=0;    
+    ROS_INFO("KPH: %fkm/h",speed);
     return speed;
 }
 
