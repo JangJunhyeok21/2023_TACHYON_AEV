@@ -22,7 +22,7 @@ void odo::publish_speed(const ros::TimerEvent& ){
     speed_pub.publish(msg);
 }
 void count_up(){
-    ROS_INFO("카운트!");
+    ROS_INFO("ISR!");
     g_count++;
 }
 
@@ -32,6 +32,6 @@ int main(int argc, char**argv){
     ros::init(argc,argv,"odo_node");
     ros::NodeHandle nh;
     odo odometer(&nh);
-    wiringPiISR(SENSOR_PIN,INT_EDGE_BOTH,&count_up); //sensing
+    wiringPiISR(SENSOR_PIN,INT_EDGE_BOTH,count_up); //sensing
     ros::spin();
 }
