@@ -37,7 +37,10 @@ int main(int argc, char**argv){
     //wiringPiISR(SENSOR_PIN,INT_EDGE_BOTH,count_up); //sensing
     while(1){
         if(SENSOR_PIN)
-        ROS_INFO("input");
+        ROS_INFO("high");
+        else
+        ROS_INFO("low");
+
     }
     ros::spin();
 }
