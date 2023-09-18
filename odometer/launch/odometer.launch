@@ -1,4 +1,4 @@
 <launch>
-  <node pkg="odometer" type="odometer" name="p_odometer/" launch-prefix="sudo"/>
-
+  <node pkg="odometer" type="odometer" name="p_odometer" launch-prefix="sudo"/>
 </launch>
+

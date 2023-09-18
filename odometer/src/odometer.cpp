@@ -1,4 +1,6 @@
 #include "odometer.h"
+#include "ros/ros.h"
+
 
 odo::odo(ros::NodeHandle *nh){
     speed=0;
