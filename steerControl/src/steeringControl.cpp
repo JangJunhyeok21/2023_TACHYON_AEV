@@ -29,7 +29,7 @@ void steer::steerControl(const ros::TimerEvent& ){
 }
 
 void setupWiringPi(){
-    wiringPiSetup();
+    wiringPiSetupPhys();
     pinMode(value,PWM_OUTPUT);
     pinMode(right,OUTPUT);
     pinMode(left,OUTPUT);

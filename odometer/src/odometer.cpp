@@ -32,13 +32,6 @@ int main(int argc, char**argv){
     ros::init(argc,argv,"odo_node");
     ros::NodeHandle nh;
     odo odometer(&nh);
-    //wiringPiISR(SENSOR_PIN,INT_EDGE_BOTH,&count_up); //sensing
-    while(1){
-        if(digitalRead(SENSOR_PIN))
-        ROS_INFO("high");
-        else
-        ROS_INFO("low");
-
-    }
+    wiringPiISR(SENSOR_PIN,INT_EDGE_BOTH,&count_up); //sensing
     ros::spin();
 }
