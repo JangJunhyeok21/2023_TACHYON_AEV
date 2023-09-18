@@ -3,7 +3,7 @@
 velocity::velocity(ros::NodeHandle *nh){
     kph=0;
     target_speed=0;
-    speed_sub=nh->subscribe("/const velocityControl::misson_msg& msgspeed",10,&velocity::speedSub, this);
+    speed_sub=nh->subscribe("/speed",10,&velocity::speedSub, this);
     target_sub=nh->subscribe("/target_velocity",10,&velocity::targetSub, this);
 }
 void velocity::speed_control(double speed, double target){ //목표속도 P제어
