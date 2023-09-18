@@ -63,7 +63,7 @@ void AS_switching(){
 }
 
 void setupWiringPi(){
-    wiringPiSetup();
+    wiringPiSetupPhys();
     pinMode(value,PWM_OUTPUT);
     pinMode(accelPin,OUTPUT);
     pinMode(regenPin,OUTPUT);

@@ -22,7 +22,7 @@ void ticking(){
 }
 
 void setupWiringPi(){
-    wiringPiSetup();
+    wiringPiSetupPhys();
     pinMode(IN_A,INPUT);
     pinMode(IN_B,INPUT);
 }
