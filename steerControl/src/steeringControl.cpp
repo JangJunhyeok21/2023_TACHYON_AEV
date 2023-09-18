@@ -19,17 +19,21 @@ void steer::steerControl(const ros::TimerEvent& ){
     float err=target_angle-angle;
     static float prev_err=0;
     float dErr=err-prev_err;
+    float I+=ki*err*dt;
+    //세츄
     prev_err=err;
     digitalWrite(err>=0?right:left,HIGH);
     digitalWrite(err>=0?left:right,LOW);
-    pwmWrite(value,abs(err*kp+err*ki*dt+kd*(dErr/dt)));
+    pwmWrite(value,abs(err*kp+I+kd*(dErr/dt)));
 }
+
 void setupWiringPi(){
     wiringPiSetup();
     pinMode(value,PWM_OUTPUT);
     pinMode(right,OUTPUT);
     pinMode(left,OUTPUT);
 }
+
 int main(int argc, char**argv){
     setupWiringPi();
     //핀설정

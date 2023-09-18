@@ -20,11 +20,13 @@ void ticking(){
         g_tick--;
     }
 }
+
 void setupWiringPi(){
     wiringPiSetup();
     pinMode(IN_A,INPUT);
     pinMode(IN_B,INPUT);
 }
+
 int main(int argc, char**argv){
     setupWiringPi();
     ros::init(argc,argv,"encode_node");

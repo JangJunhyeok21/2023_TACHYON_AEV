@@ -11,8 +11,7 @@ odo::odo(ros::NodeHandle *nh){
 double odo::calculate_speed(){
     total_count+=g_count; //refresh odom
     speed=(g_count*1.527/PPR)*3.6*2; //count to KPH
-    g_count=0;    
-    ROS_INFO("KPH: %fkm/h",speed);
+    g_count=0;
     return speed;
 }
 
@@ -23,6 +22,7 @@ void odo::publish_speed(const ros::TimerEvent& ){
     speed_pub.publish(msg);
 }
 void count_up(){
+    ROS_INFO("카운트!");
     g_count++;
 }
 

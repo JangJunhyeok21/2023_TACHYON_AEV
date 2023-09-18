@@ -7,11 +7,13 @@
 #define value 40
 #define right 36
 #define left 38
+
 #define kp 1
-#define ki 1
-#define kd 1
+#define ki 0
+#define kd 0
 #define dt 0.01
 #define steerRatio 4.0
+#define Maximumangle 20
 
 class steer
 {
