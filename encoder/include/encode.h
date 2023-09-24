@@ -4,7 +4,7 @@
 #include "std_msgs/Int32.h"
 #include <wiringPi.h>
 
-#define IN_A 33
+#define IN_A 31
 #define IN_B 35
 #define steerRatio 4.0
 

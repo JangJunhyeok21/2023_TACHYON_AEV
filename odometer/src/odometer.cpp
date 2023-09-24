@@ -24,7 +24,6 @@ void odo::publish_speed(const ros::TimerEvent& ){
     speed_pub.publish(msg);
 }
 void count_up(){
-    ROS_INFO("ISR!");
     g_count++;
 }
 

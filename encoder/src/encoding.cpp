@@ -1,4 +1,8 @@
 #include "encode.h"
+#include <iostream>
+
+using namespace std;
+
 
 encoder::encoder(ros::NodeHandle *nh){
     encode_pub=nh->advertise<std_msgs::Int32>("/encoder",10);
@@ -8,6 +12,8 @@ encoder::encoder(ros::NodeHandle *nh){
 void encoder::publish_encode(const ros::TimerEvent& ){
     std_msgs::Int32 msg;
     msg.data=g_tick;
+    std::cout << g_tick << endl;
+    
     encode_pub.publish(msg);
 }
 

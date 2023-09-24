@@ -4,7 +4,7 @@
 #include "std_msgs/Int32.h"
 #include <wiringPi.h>
 
-#define value 40
+#define value 33
 #define right 36
 #define left 38
 
@@ -12,8 +12,8 @@
 #define ki 0
 #define kd 0
 #define dt 0.01
-#define steerRatio 4.0
-#define Maximumangle 20
+#define steerRatio 3.0
+#define Maximumangle 58
 
 class steer
 {

@@ -1,9 +1,13 @@
 #include "velocityControl.h"
+#include <iostream>
+
+using namespace std;
+
 
 velocity::velocity(ros::NodeHandle *nh){
     kph=0;
     target_speed=0;
-    speed_sub=nh->subscribe("/const velocityControl::misson_msg& msgspeed",10,&velocity::speedSub, this);
+    speed_sub=nh->subscribe("/speed",10,&velocity::speedSub, this);
     target_sub=nh->subscribe("/target_velocity",10,&velocity::targetSub, this);
 }
 void velocity::speed_control(double speed, double target){ //목표속도 P제어
@@ -12,21 +16,32 @@ void velocity::speed_control(double speed, double target){ //목표속도 P제�
     if(err>=0){
         digitalWrite(accelPin,HIGH);
         digitalWrite(regenPin,LOW);
-        pwmWrite(value,abs(err*kp));
+        pwmWrite(value,abs(err*kp)/60*1024) ;
+        // pwmWrite(value,0);
+	    // ROS_INFO("cmd,%f",abs(err*kp));
+        std::cout << abs(err*kp)/60*1024<<endl; 
+
+        // ROS_INFO(abs(err*kp));
     }else{
         digitalWrite(accelPin,LOW);
         digitalWrite(regenPin,HIGH);
-        pwmWrite(value,abs(err*kp)/5);  //회생제동량은 가속에 비해 10%
+        // pwmWrite(value,0);
+        pwmWrite(value,abs(err*kp)/5);
+	    // ROS_INFO("err,%f",abs(err*kp));  //회생제동량은 가속에 비해 10%
+        // ROS_INFO(abs(err*kp)/5);
+        // pwmWrite(value,0);
     }
 }
 //미션에 따른 종방향제어는 상위에 맡기고 속도와 긴급정지만 판단한다.
 //조향모터와 클러치에 릴레이 사용하는걸 생각하며 설계. -> 하드웨어적 연결로 해결(as_sw에 5V직결)
 void velocity::speedSub(const odometer::speed_msg& msg){
-    ROS_INFO("KPH: %fkm/h, Trip: %fm",msg.kph, msg.odo);
+    // ROS_INFO("KPH: %fkm/h, Trip: %fm",msg.kph, msg.odo);
     kph=msg.kph;
-    if(AS_SW_flag && !estop_flag){ //자율주행 모드가 켜지고 Estop이 해제되어 있을 때
-        speed_control(kph,target_speed);
-    }
+    // std::cout << AS_SW_flag << estop_flag << endl;
+
+    // if(AS_SW_flag && !estop_flag){ //자율주행 모드가 켜지고 Estop이 해제되어 있을 때
+    speed_control(kph,target_speed);
+    // }
 }
 void velocity::targetSub(const velocityControl::velocity_msg& msg){
     target_speed=msg.targetKph;
@@ -48,7 +63,7 @@ void estop(){
         digitalWrite(regenPin,HIGH);
         pwmWrite(value,1024);
     }else{
-        ROS_INFO("E-STOP realese");
+        // ROS_INFO("E-STOP realese");
         release();
     }
 }
