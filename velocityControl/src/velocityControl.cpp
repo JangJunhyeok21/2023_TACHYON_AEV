@@ -19,7 +19,7 @@ void velocity::speed_control(double speed, double target){ //목표속도 P제�
         pwmWrite(value,abs(err*kp)/60*1024) ;
         // pwmWrite(value,0);
 	    // ROS_INFO("cmd,%f",abs(err*kp));
-        std::cout << abs(err*kp)/60*1024<<endl; 
+        //std::cout << abs(err*kp)/60*1024<<endl; 
 
         // ROS_INFO(abs(err*kp));
     }else{
@@ -37,7 +37,8 @@ void velocity::speed_control(double speed, double target){ //목표속도 P제�
 void velocity::speedSub(const odometer::speed_msg& msg){
     // ROS_INFO("KPH: %fkm/h, Trip: %fm",msg.kph, msg.odo);
     kph=msg.kph;
-    // std::cout << AS_SW_flag << estop_flag << endl;
+
+    ROS_INFO("%d,%d",digitalRead(AS_SW), digitalRead(estopPin));
 
     // if(AS_SW_flag && !estop_flag){ //자율주행 모드가 켜지고 Estop이 해제되어 있을 때
     speed_control(kph,target_speed);
