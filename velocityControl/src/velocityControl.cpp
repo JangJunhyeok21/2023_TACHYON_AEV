@@ -1,5 +1,4 @@
 #include "velocityControl.h"
-#include <iostream>
 
 velocity::velocity(ros::NodeHandle *nh)
 {

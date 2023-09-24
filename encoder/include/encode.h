@@ -6,7 +6,6 @@
 
 #define IN_A 31
 #define IN_B 35
-#define steerRatio 4.0
 
 int g_tick=0;
 
