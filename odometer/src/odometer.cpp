@@ -12,7 +12,7 @@ odo::odo(ros::NodeHandle *nh){
 
 double odo::calculate_speed(){
     total_count+=g_count; //refresh odom
-    speed=(g_count*1.527/PPR)*3.6*2; //count to KPH
+    speed=(g_count/PPR/ratio)*CIRCUL*3.6*2; //count to KPH
     g_count=0;
     return speed;
 }
@@ -20,7 +20,7 @@ double odo::calculate_speed(){
 void odo::publish_speed(const ros::TimerEvent& ){
     odometer::speed_msg msg;
     msg.kph=calculate_speed();
-    msg.odo=total_count/PPR*1.527;
+    msg.odo=total_count/PPR/ratio*CIRCUL;
     speed_pub.publish(msg);
 }
 void count_up(){

@@ -8,37 +8,41 @@ velocity::velocity(ros::NodeHandle *nh)
     target_sub = nh->subscribe("/target_velocity", 10, &velocity::targetSub, this);
 }
 void velocity::speed_control(double speed, double target)
-{ // 목표속도 P제어
-    // P control
+{ // 목표속도 PI제어
+    // PI control
     float err = target - speed;
-    if (err >= 0)
-    {
-        digitalWrite(accelPin, HIGH);
-        digitalWrite(regenPin, LOW);
-        pwmWrite(value, abs(err * kp) + 200); // 기본 200깔고 가기
-    }
-    else
-    {
-        digitalWrite(accelPin, LOW);
-        digitalWrite(regenPin, HIGH);
-        pwmWrite(value, abs(err * kp) / 5); // 회생제동량은 가속에 비해 10%
-    }
+    float P = kp * err;
+    static float I = 0;
+    I += (ki * err * dt);
+    if (abs(I) > 1023)
+        I = 0;
+    pwmWrite(accel, (P + I) * amp);
 }
 
-void release()
+void velocity::release()
 {
-    digitalWrite(brakePin, LOW);
-    digitalWrite(accelPin, LOW);
     digitalWrite(regenPin, LOW);
-    pwmWrite(value, 0);
+    pwmWrite(accel, 0);
+    if (estopEng)
+    {
+        digitalWrite(brake1, LOW);
+        ros::Duration(1.5).sleep;
+        digitalWrite(brake2, LOW);
+        estopEng = false;
+    }
 }
-void estop()
+void velocity::estop()
 {
     ROS_INFO("E-STOP!!");
-    digitalWrite(brakePin, HIGH);
-    digitalWrite(accelPin, LOW);
+    pwmWrite(accel, 0);
     digitalWrite(regenPin, HIGH);
-    pwmWrite(value, 1024);
+    if (!estopEng)
+    {
+        digitalWrite(brake1, HIGH);
+        ros::Duration(1.5).sleep;
+        digitalWrite(brake2, HIGH);
+        estopEng = true;
+    }
 }
 // 미션에 따른 종방향제어는 상위에 맡기고 속도와 긴급정지만 판단한다.
 void velocity::speedSub(const odometer::speed_msg &msg)
@@ -50,11 +54,11 @@ void velocity::speedSub(const odometer::speed_msg &msg)
         speed_control(kph, target_speed);
     }
     else if (estop_flag)
-    {   //상위제어 혹은 스위치로 estop 활성화 되어있을 때
+    { // 상위제어 혹은 스위치로 estop 활성화 되어있을 때
         estop();
     }
     else
-    {   //이도 저도 아닐때
+    { // 이도 저도 아닐때
         release();
     }
 }
@@ -76,10 +80,10 @@ void AS_switching()
 void setupWiringPi()
 {
     wiringPiSetupPhys();
-    pinMode(value, PWM_OUTPUT);
-    pinMode(accelPin, OUTPUT);
+    pinMode(accel, PWM_OUTPUT);
+    pinMode(brake2, OUTPUT);
     pinMode(regenPin, OUTPUT);
-    pinMode(brakePin, OUTPUT);
+    pinMode(brake1, OUTPUT);
     pinMode(AS_SW, INPUT);
     pinMode(estopPin, INPUT);
 }

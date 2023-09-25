@@ -4,7 +4,9 @@
 #include "odometer/speed_msg.h"
 #include <wiringPi.h>
 #define SENSOR_PIN 23
-#define PPR 32 //Hall 8 * ratio 4
+#define PPR 8
+#define CIRCUL 1.527
+#define ratio 55/12
 
 static int g_count;
 

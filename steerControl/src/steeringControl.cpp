@@ -22,19 +22,17 @@ void steer::steerControl(const ros::TimerEvent &)
     // 조향은 PID제어
     float err = target_angle - angle;
     static float prev_err = 0;
-    float dErr = err - prev_err;
+    float P = kp * err;
     static float I = 0;
-    I += err * dt;
-    float control_input = 0;
+    I += ki * err * dt;
+    float D = kd * (err - prev_err) / dt;
     // 세츄
     if (abs(I) > 1023)
         I = 0;
     prev_err = err;
     digitalWrite(err >= 0 ? right : left, HIGH);
     digitalWrite(err >= 0 ? left : right, LOW);
-
-    control_input = std::min(abs(err*kp+ki*I+kd*(dErr/dt))*amp,1023); //최대 1023
-    pwmWrite(value, control_input);
+    pwmWrite(value, abs(P + I + D) * amp);
 }
 
 void setupWiringPi()
