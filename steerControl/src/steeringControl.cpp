@@ -33,6 +33,7 @@ void steer::steerControl(const ros::TimerEvent &)
     digitalWrite(err >= 0 ? right : left, HIGH);
     digitalWrite(err >= 0 ? left : right, LOW);
     pwmWrite(value, abs(P + I + D) * amp);
+    ROS_INFO("angle: %d value: %f", angle, abs(P + I + D));
 }
 
 void setupWiringPi()

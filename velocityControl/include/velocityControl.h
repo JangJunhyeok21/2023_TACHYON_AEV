@@ -6,36 +6,24 @@
 #include <wiringPi.h>
 #include <stdlib.h>
 
-<<<<<<< HEAD
-#define value 32
-#define brakePin 16 //BCM## arduino boolean signal 0:release 1:engaged
-#define AS_SW 13 
-#define accelPin 18
-=======
 #define accel 32
 #define brake1 16
 #define AS_SW 13
 #define brake2 18
->>>>>>> control
 #define regenPin 24
 #define estopPin 11
-#define kp 1
-#define ki 1
+#define kp 80
+#define ki 2
 #define dt 0.1
 #define amp 1
 
-<<<<<<< HEAD
-bool AS_SW_flag=false; //0:m 1:a
-bool estop_flag=false; //0:no estop 1:estop
-=======
 bool AS_SW_flag = false; // 0:m 1:a
 bool estop_flag = false; // 0:no estop 1:estop
->>>>>>> control
 
 class velocity
 {
 private:
-    double kph, target_speed, accel;
+    double kph, target_speed;
     bool estopEng = false;
 
 public:

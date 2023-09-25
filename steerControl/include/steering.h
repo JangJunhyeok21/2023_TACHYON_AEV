@@ -9,8 +9,8 @@
 #define right 36
 #define left 38
 
-#define kp 1
-#define ki 0
+#define kp 100
+#define ki 2
 #define kd 0
 #define dt 0.01
 #define steerRatio 3.0

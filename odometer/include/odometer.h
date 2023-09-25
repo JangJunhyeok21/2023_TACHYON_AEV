@@ -6,7 +6,7 @@
 #define SENSOR_PIN 23
 #define PPR 8
 #define CIRCUL 1.527
-#define ratio 55/12
+#define ratio 4.583
 
 static int g_count;
 
