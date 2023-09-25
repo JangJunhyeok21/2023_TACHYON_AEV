@@ -1,0 +1,13 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\odometer",
+    "\\odometer\\out",
+    "\\odometer\\out\\build",
+    "\\odometer\\src",
+    "\\velocityControl",
+    "\\velocityControl\\src"
+  ],
+  "SelectedNode": "\\odometer\\src\\odometer.cpp",
+  "PreviewInSolutionExplorer": false
+}
