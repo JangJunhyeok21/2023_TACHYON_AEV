@@ -3,6 +3,7 @@
 #include "ros/ros.h"
 #include "std_msgs/Int32.h"
 #include <wiringPi.h>
+#include <algorithm>
 
 #define value 33
 #define right 36
@@ -14,6 +15,7 @@
 #define dt 0.01
 #define steerRatio 3.0
 #define Maximumangle 58
+#define amp 1
 
 class steer
 {
