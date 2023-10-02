@@ -26,7 +26,7 @@ void velocity::release()
     if (estopEng)
     {
         digitalWrite(brake1, LOW);
-        ros::Duration(1.5).sleep;
+        ros::Duration(1.5).sleep();
         digitalWrite(brake2, LOW);
         estopEng = false;
     }
@@ -39,7 +39,7 @@ void velocity::estop()
     if (!estopEng)
     {
         digitalWrite(brake1, HIGH);
-        ros::Duration(1.5).sleep;
+        ros::Duration(1.5).sleep();
         digitalWrite(brake2, HIGH);
         estopEng = true;
     }

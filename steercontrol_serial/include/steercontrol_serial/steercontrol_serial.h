@@ -2,8 +2,8 @@
 #define STEERING_H
 #include "ros/ros.h"
 #include "std_msgs/Int32.h"
+#include <serial/serial.h>
 #include <wiringPi.h>
-#include <algorithm>
 
 #define value 33
 #define right 36
@@ -22,6 +22,7 @@ class steer
 private:
     int target_angle, angle;
 public:
+    serial::Serial ser;
     ros::Timer timer;
     steer(ros::NodeHandle *nh);
     ros::Subscriber target_sub;

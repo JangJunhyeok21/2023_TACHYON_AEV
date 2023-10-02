@@ -23,7 +23,7 @@ bool estop_flag = false; // 0:no estop 1:estop
 class velocity
 {
 private:
-    double kph, target_speed, accel;
+    double kph, target_speed;
     bool estopEng = false;
 
 public:
